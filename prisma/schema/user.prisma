@@ -48,7 +48,7 @@ model Doctor {
     updatedAt           DateTime @updatedAt
 
     user User @relation(fields: [email], references: [email])
-
+    doctorSchedules DoctorSchedules[]
     @@map("doctors")
 }
 
@@ -57,7 +57,7 @@ model Patient {
     email        String   @unique
     name         String
     profilePhoto String?
-    address      String
+    address      String?
     isDeleted    Boolean  @default(false)
     createdAt    DateTime @default(now())
     updatedAt    DateTime @updatedAt

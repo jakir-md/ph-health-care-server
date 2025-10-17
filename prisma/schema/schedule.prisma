@@ -1,0 +1,24 @@
+model Schedule {
+    id              String            @id @default(uuid())
+    startDateTime   DateTime
+    endDateTime     DateTime
+    createdAt       DateTime          @default(now())
+    updatedAt       DateTime          @updatedAt
+    doctorSchedules DoctorSchedules[]
+
+    @@map("schedules")
+}
+
+model DoctorSchedules {
+    doctorId   String
+    doctor     Doctor   @relation(fields: [doctorId], references: [id])
+    schedule   Schedule @relation(fields: [scheduleId], references: [id])
+    scheduleId String
+    isBooked   Boolean  @default(true)
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@id([doctorId, scheduleId]) //this is composite key. as any combination of the two should be the same
+    //jodi scheduleId ekoi hoy tahoile doctorId alada hobe
+    @@map("doctorSchedules")
+}
