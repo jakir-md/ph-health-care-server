@@ -23,19 +23,44 @@ const getAllDoctorsFromDb = catchAsync(
 );
 
 const updateDoctorInDb = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
 
-    const { id } = req.params;
+  const result = await doctorServices.updateDoctorInDb(id, req.body);
 
-    const result = await doctorServices.updateDoctorInDb(id, req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Doctor updated successfully!",
+    data: result,
+  });
+});
 
+const getDoctorsAISuggestion = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await doctorServices.getDoctorsAISuggestion(req.body);
     sendResponse(res, {
-        statusCode: 200,
-        success: true,
-        message: "Doctor updated successfully!",
-        data: result
-    })
-})
+      statusCode: 200,
+      success: true,
+      message: "Doctors Retrieved according to symptoms successfully!",
+      data: result,
+    });
+  }
+);
+
+const getDoctorById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await doctorServices.getDoctorById(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Doctors Retrieved according to symptoms successfully!",
+    data: result,
+  });
+});
+
 export const doctorControllers = {
   getAllDoctorsFromDb,
-  updateDoctorInDb
+  updateDoctorInDb,
+  getDoctorsAISuggestion,
+  getDoctorById
 };

@@ -1,0 +1,50 @@
+model Appointment {
+    id             String            @id @default(uuid())
+    patientId      String
+    patient        Patient           @relation(fields: [patientId], references: [id])
+    doctorId       String
+    doctor         Doctor            @relation(fields: [doctorId], references: [id])
+    videoCallingId String
+    scheduleId     String
+    schedule       Schedule          @relation(fields: [scheduleId], references: [id])
+    status         AppointmentStatus @default(SCHEDULED)
+    paymentStatus  PaymentStatus     @default(UNPAID)
+
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    payments     Payment? //should be one to one relation with prescriptions
+    Prescription Prescription? //should be one to one relation with prescriptions
+
+    @@map("appointments")
+}
+
+model Payment {
+    id                 String        @id @default(uuid())
+    appointmentId      String        @unique //one to one with appointment => thats why made unique
+    appointments       Appointment   @relation(fields: [appointmentId], references: [id])
+    status             PaymentStatus @default(UNPAID)
+    transactionId      String        @unique
+    amount             Float
+    paymentGateWayData Json?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("payments")
+}
+
+model Prescription {
+    id            String      @id @default(uuid())
+    doctorId      String
+    doctor        Doctor      @relation(fields: [doctorId], references: [id])
+    patientId     String
+    patient       Patient     @relation(fields: [patientId], references: [id])
+    appointmentId String      @unique //one to one with appointment => thats why made unique
+    appointments  Appointment @relation(fields: [appointmentId], references: [id])
+    instructions  String
+    followUpDate  DateTime?
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+
+    @@map("prescriptions")
+}
